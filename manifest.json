@@ -1,13 +1,19 @@
 {
   "manifest_version": 3,
   "name": "Roie Assistant",
-  "description": "Bolding words and collecting treats",
+  "description": "Making it more efficient to read text on web pages with Bionic Reading",
   "version": "1.0",
-  "description": "Bolds the first 3 letters of every word on a page",
+  "permissions": [
+    "activeTab"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.js"],
+      "matches": [
+        "https://*.wikipedia.org/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ],
       "run_at": "document_idle"
     }
   ],
@@ -16,15 +22,17 @@
       "resources": [
         "assets/logo.png"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "https://*.wikipedia.org/*"
+      ]
     }
   ],
   "action": {
-      "default_icon": {
-        "16": "assets/logo.png",
-        "24": "assets/logo.png",
-        "32": "assets/logo.png"
-      },
-      "default_title": "Roie Assistant"
-    }
+    "default_icon": {
+      "16": "assets/logo.png",
+      "24": "assets/logo.png",
+      "32": "assets/logo.png"
+    },
+    "default_title": "Roie Assistant"
+  }
 }
