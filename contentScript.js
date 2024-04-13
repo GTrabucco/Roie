@@ -1,19 +1,44 @@
-const gmailMessageRegex = /^https?:\/\/mail\.google\.com\/mail\/u\/0\/#inbox\/.*/;
+const wikiRegex = /^https?:\/\/en\.wikipedia\.org\/wiki\/.*/;
 
 const regexDict = {
-  gmailMessage : gmailMessageRegex
+  wikiRegex: wikiRegex
 }
 
-function makeFirst3LettersBold(textContent) {
+function makeBionic(textContent) {
+  textContent = textContent.replace(/<\/a>/g, " </a>");
+  textContent = textContent.replace(/<a/g, " <a");
+  textContent = textContent.replace(/<sup/g, " <sup");
+  textContent = textContent.replace(/<\/sup>/g, " </sup>");
+  textContent = textContent.replace(/<span/g, " <span");
+  textContent = textContent.replace(/<\/span>/g, " </span>");
+  textContent = textContent.replace(/<i>/g, " <i>");
+  textContent = textContent.replace(/<\/i>/g, " </i>");
+  textContent = textContent.replace(/<b>/g, " <b>");
+  textContent = textContent.replace(/<\/b>/g, " </b>");
+  textContent = textContent.replace(/>/g, "> ")
+  textContent = textContent.replace("&nbsp;", "")
+  let inTag = false;
+  const openingTagPattern = /^<[^/].*/;
   const words = textContent.trim().split(/\s+/);
   const boldWords = words.map(word => {
-    if (word.startsWith('<') && word.endsWith('>')) {
+    if (openingTagPattern.test(word)) {
+      inTag = true
       return word;
     }
 
-    const first3Letters = word.substr(0, 3);
-    const remainingLetters = word.substr(3);
-    return `<span style="font-weight: bold">${first3Letters}</span>${remainingLetters}`;
+    if (inTag == true && word.includes(">")) {
+      inTag = false
+      return word
+    }
+
+    const targetWords = ["<i>", "<b>", "</a>", "</sup>", "</span>", "</i>", "</b>"];
+    if (targetWords.includes(word) || inTag) {
+      return word;
+    }
+
+    const lettersToBold = word.substr(0, word.length / 2);
+    const remainingLetters = word.substr(word.length / 2);
+    return `<strong>${lettersToBold}</strong>${remainingLetters}`;
   });
 
   return boldWords.join(' ');
@@ -24,24 +49,19 @@ function onUrlChange() {
     let regex = regexDict[key];
     if (regex.test(window.location.href)) {
       switch (key) {
-        case "gmailMessage":
-          document.querySelectorAll('table p').forEach(x => {
-            const originalText = x.textContent;
-            const boldText = makeFirst3LettersBold(originalText);
+        case "wikiRegex":
+          document.querySelectorAll('p').forEach(x => {
+            const boldText = makeBionic(x.innerHTML);
             x.innerHTML = boldText;
           });
 
           break;
-        case value2:
-          // code to execute when expression matches value2
-          break;
         // more cases
         default:
-          // code to execute when none of the cases match expression
           break;
       }
 
-      break; // Break out of the loop
+      break;
     }
   }
 }

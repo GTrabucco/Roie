@@ -1,6 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Bold First 3 Letters",
+  "name": "Roie Assistant",
+  "description": "Bolding words and collecting treats",
   "version": "1.0",
   "description": "Bolds the first 3 letters of every word on a page",
   "content_scripts": [
@@ -9,5 +10,21 @@
       "js": ["contentScript.js"],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/logo.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+      "default_icon": {
+        "16": "assets/logo.png",
+        "24": "assets/logo.png",
+        "32": "assets/logo.png"
+      },
+      "default_title": "Roie Assistant"
+    }
 }
